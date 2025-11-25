@@ -1,0 +1,13 @@
+﻿<prism:PrismApplication x:Class="PipeProject.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:PipeProject.Converters"
+             xmlns:prism="http://prismlibrary.com/">
+    <Application.Resources>
+        <converters:TextValidityConverter x:Key="TextValidityConverter"/>
+        <converters:LabelLengthConverter x:Key="LabelLengthConverter"/>
+        <converters:NumberValidityConverter x:Key="NumberValidityConverter"/>
+        <converters:WaveSpeedValidityConverter x:Key="WaveSpeedValidityConverter"/>
+        <converters:FormValidityConverter x:Key="FormValidityConverter"/>
+    </Application.Resources>
+</prism:PrismApplication>

@@ -1,0 +1,128 @@
+﻿<UserControl x:Class="PipeProject.Views.PipeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:PipeProject.Converters"
+             Margin="10">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Data Entry Area -->
+        <StackPanel Grid.Column="0">
+            <TextBlock Text="Pipe Data Entry" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <!-- Label Field -->
+            <TextBlock Text="Label (16 chars max, unique):" Margin="0,5"/>
+            <TextBox Text="{Binding CurrentPipe.Label, UpdateSourceTrigger=PropertyChanged}"
+                     MaxLength="16"
+                     Height="25" Margin="0,0,0,10"
+                     Name="PipeLabel">
+                <TextBox.Background>
+                    <Binding Path="CurrentPipe.Label" Converter="{StaticResource LabelLengthConverter}"/>
+                </TextBox.Background>
+            </TextBox>
+
+            <!-- Pipe Type Field -->
+            <TextBlock Text="Pipe Type:" Margin="0,5"/>
+            <ComboBox ItemsSource="{Binding PipeTypes}" 
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Type"
+                      SelectedValue="{Binding CurrentPipe.PipeType}"
+                      Height="25" Margin="0,0,0,10"/>
+
+            <!-- Diameter Field -->
+            <TextBlock Text="Diameter (cm, > 0):" Margin="0,5"/>
+            <TextBox Text="{Binding CurrentPipe.Diameter, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     Height="25" Margin="0,0,0,10"
+                     PreviewTextInput="NumberValidationTextBox"
+                     Name="Diameter">
+                <TextBox.Background>
+                    <Binding Path="Text" RelativeSource="{RelativeSource Self}" Converter="{StaticResource NumberValidityConverter}"/>
+                </TextBox.Background>
+            </TextBox>
+
+            <!-- Length Field -->
+            <TextBlock Text="Length (m, > 0):" Margin="0,5"/>
+            <TextBox Text="{Binding CurrentPipe.Length, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     Height="25" Margin="0,0,0,10"
+                     PreviewTextInput="NumberValidationTextBox"
+                     Name="Length">
+                <TextBox.Background>
+                    <Binding Path="Text" RelativeSource="{RelativeSource Self}" Converter="{StaticResource NumberValidityConverter}"/>
+                </TextBox.Background>
+            </TextBox>
+
+            <!-- Wave Speed Field -->
+            <TextBlock Text="Wave Speed (m/sec, 0-1500):" Margin="0,5"/>
+            <TextBox Text="{Binding CurrentPipe.WaveSpeed, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     Height="25" Margin="0,0,0,10"
+                     PreviewTextInput="NumberValidationTextBox"
+                     Name="WaveSpeed">
+                <TextBox.Background>
+                    <Binding Path="Text" RelativeSource="{RelativeSource Self}" Converter="{StaticResource WaveSpeedValidityConverter}"/>
+                </TextBox.Background>
+            </TextBox>
+
+            <!-- Young's Modulus Field -->
+            <TextBlock Text="Young's Modulus (GPa, > 0) (ignore unless pipe is DINStandard):" 
+                       Margin="0,5"
+                       Visibility="{Binding ShowYoungsModulus, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Text="{Binding CurrentPipe.YoungsModulus, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     Height="25" Margin="0,0,0,10"
+                     Visibility="{Binding ShowYoungsModulus, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                     PreviewTextInput="NumberValidationTextBox"
+                     Name="Youngs">
+                <TextBox.Background>
+                    <Binding Path="Text" RelativeSource="{RelativeSource Self}" Converter="{StaticResource NumberValidityConverter}"/>
+                </TextBox.Background>
+            </TextBox>
+
+            <StackPanel Orientation="Horizontal" Margin="0,10">
+                <Button Content="Reset" Command="{Binding ResetCommand}" 
+                        Width="60" Height="30" Margin="0,0,10,0"/>
+                <Button Content="Apply" Command="{Binding ApplyCommand}"
+                        Width="60" Height="30" Margin="0,0,10,0" Name="Apply"/>
+                <Button Content="Summary" Command="{Binding SummaryCommand}"
+                        Width="70" Height="30" Margin="0,0,10,0"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,10">
+                <Button Content="Save" Command="{Binding SaveCommand}"
+                        Width="60" Height="30" Margin="0,0,10,0" 
+                        Background="LightGreen" Foreground="DarkGreen"/>
+                <Button Content="Load" Command="{Binding LoadCommand}"
+                        Width="60" Height="30" Margin="0,0,10,0" 
+                        Background="LightBlue" Foreground="DarkBlue"/>
+                <Button Content="Exit" Command="{Binding ExitCommand}"
+                        Width="60" Height="30" 
+                        Background="LightCoral" Foreground="DarkRed"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Pipe list-->
+        <StackPanel Grid.Column="2">
+            <TextBlock Text="Existing Pipes" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
+            <ListView ItemsSource="{Binding AllPipes}" 
+                      SelectedItem="{Binding SelectedPipe}"
+                      Height="300">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Label" DisplayMemberBinding="{Binding Label}" Width="100"/>
+                        <GridViewColumn Header="Type" DisplayMemberBinding="{Binding PipeType}" Width="100"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <StackPanel Orientation="Horizontal" Margin="0,10">
+                <Button Content="Edit" Command="{Binding EditCommand}"
+                        Width="60" Height="25" Margin="0,0,10,0"/>
+                <Button Content="Delete" Command="{Binding DeleteCommand}"
+                        Width="60" Height="25" Background="LightCoral"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>
